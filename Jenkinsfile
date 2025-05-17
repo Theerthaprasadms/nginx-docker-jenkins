@@ -5,14 +5,14 @@ pipeline {
     }
     environment {
         IMAGE_NAME = "nginx-${params.ENVIRONMENT}"
-        AWS_ACCOUNT_ID = "<your_aws_account_id>"
-        AWS_REGION = "us-east-1"
+        AWS_ACCOUNT_ID = "774305596656"
+        AWS_REGION = "ap-south-1"
         ECR_REPO = "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${IMAGE_NAME}"
     }
     stages {
         stage('Clone Repo') {
             steps {
-                git url: 'https://github.com/your-username/nginx-docker-jenkins.git'
+                git url: 'https://github.com/Theerthaprasadms/nginx-docker-jenkins.git'
             }
         }
 
@@ -21,7 +21,7 @@ pipeline {
                 script {
                     sh '''
                         docker build -t temp-nginx .
-                        docker run -d --name test-nginx -p 8080:8080 temp-nginx
+                        docker run -d --name test-nginx -p 80:80 temp-nginx
                         sleep 5
                         STATUS=$(curl -o /dev/null -s -w "%{http_code}" http://localhost:8080)
                         echo "Status Code: $STATUS"
@@ -73,7 +73,7 @@ pipeline {
                 script {
                     sh '''
                     docker rm -f deployed-nginx || true
-                    docker run -d --name deployed-nginx -p 8080:8080 ${ECR_REPO}:latest
+                    docker run -d --name deployed-nginx -p 80:80 ${ECR_REPO}:latest
                     '''
                 }
             }
@@ -83,7 +83,7 @@ pipeline {
             steps {
                 script {
                     def ip = sh(script: "hostname -I | awk '{print $1}'", returnStdout: true).trim()
-                    echo "Nginx running at: http://${ip}:8080"
+                    echo "Nginx running at: http://${ip}:80"
                 }
             }
         }
