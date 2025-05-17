@@ -12,7 +12,8 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                git url: 'https://github.com/Theerthaprasadms/nginx-docker-jenkins.git'
+                git url: 'https://github.com/Theerthaprasadms/nginx-docker-jenkins.git', branch: 'main'
+    }
             }
         }
 
