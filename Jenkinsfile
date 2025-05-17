@@ -82,7 +82,7 @@ pipeline {
         stage('Expose IP and Port') {
             steps {
                 script {
-                    def ip = sh(script: "hostname -I | awk '{print $1}'", returnStdout: true).trim()
+                    def ip = sh(script: '''hostname -I | awk '{print $1}' ''', returnStdout: true).trim()
                     echo "Nginx running at: http://${ip}:80"
                 }
             }
